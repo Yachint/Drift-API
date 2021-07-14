@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const helperUtils = require("../utils/helper_utils");
+const autoPinger = require("../utils/auto-ping");
 
 class Trends {
   constructor() {
@@ -8,9 +9,17 @@ class Trends {
     this.trendCreatedAt = {};
     this.ranking = {};
     this.tempId = 0;
+    this.autoPingStarted = new Set();
   }
 
   comparator = (trend_a, trend_b) => trend_a.name === trend_b.name;
+
+  enableAutoPing = (woeid, limit, time) => {
+    if (!this.autoPingStarted.has(woeid)) {
+      this.autoPingStarted.add(woeid);
+      autoPinger.callToRefreshTrends(woeid, limit, time);
+    }
+  };
 
   saveTrends = (woeid, trendsList, serverDate) => {
     const slimmed = trendsList[0]["trends"];

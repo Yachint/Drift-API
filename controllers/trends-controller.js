@@ -30,6 +30,7 @@ const getTrends = async (req, res, next) => {
 
         //Do optimization on list after response
         trends.optimizeTrends(woeid, trends.list[woeid]);
+        trends.enableAutoPing(woeid, 10, 150000);
       })
       .catch((err) => {
         console.log(err);
