@@ -1,4 +1,5 @@
 const _ = require("lodash");
+const crypto = require("crypto");
 const helperUtils = require("../utils/helper_utils");
 const autoPinger = require("../utils/auto-ping");
 
@@ -10,6 +11,7 @@ class Trends {
     this.ranking = {};
     this.tempId = 0;
     this.autoPingStarted = new Set();
+    this.trendsHash = {};
   }
 
   comparator = (trend_a, trend_b) => trend_a.name === trend_b.name;
@@ -68,10 +70,17 @@ class Trends {
       );
     }
 
+    this.trendsHash[woeid] = crypto
+      .createHash("md5")
+      .update(JSON.stringify(this.list[woeid]))
+      .digest("hex");
     this.refreshTimestamp(woeid, this.list[woeid]);
 
     this.timestamp[woeid] = new Date();
   };
+
+  provideCurrentHash = (woeid) =>
+    this.trendsHash[woeid] ? this.trendsHash[woeid] : "null";
 
   refreshTimestamp = (woeid, trendsList) => {
     trendsList.forEach((trend) => {

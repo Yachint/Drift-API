@@ -3,8 +3,9 @@ require("dotenv").config();
 const commonHeaders = require("./middleware/common-headers");
 const app = express();
 const TrendsModel = require("./models/trends-model");
-const autoPinger = require("./utils/auto-ping");
+const expressWs = require("express-ws")(app);
 const trendsRoutes = require("./routes/trends-routes");
+const wsRoutes = require("./routes/ws-routes");
 const trends = new TrendsModel();
 const startTime = new Date();
 
@@ -14,6 +15,7 @@ app.use(commonHeaders);
 app.disable("etag").disable("x-powered-by");
 
 app.use("/api/v1/trends", trendsRoutes);
+app.use("/ws", wsRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

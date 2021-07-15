@@ -24,13 +24,14 @@ const getTrends = async (req, res, next) => {
         res.json({
           status: 200,
           message: "trends fetched (Fresh)",
+          hash: trends.provideCurrentHash(woeid),
           data: trends.getTrends(woeid, limit),
           errors: false,
         });
 
         //Do optimization on list after response
         trends.optimizeTrends(woeid, trends.list[woeid]);
-        trends.enableAutoPing(woeid, 10, 150000);
+        trends.enableAutoPing(woeid, 10, 325500);
       })
       .catch((err) => {
         console.log(err);
@@ -48,6 +49,7 @@ const getTrends = async (req, res, next) => {
     res.json({
       status: 200,
       message: "trends fetched (CACHE)",
+      hash: trends.provideCurrentHash(woeid),
       data: trends.getTrends(woeid, limit),
       errors: false,
     });
@@ -86,7 +88,7 @@ const isTimerExpired = (date) => {
   if (date) {
     const diifDate = (new Date() - date) / (60 * 1000);
     console.log("Diff date :" + diifDate);
-    if (diifDate > 2) {
+    if (diifDate > 5) {
       isSafe = true;
     }
   } else {
