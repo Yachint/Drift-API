@@ -16,7 +16,7 @@ const getTrends = async (req, res, next) => {
   if (!trends.list[woeid] || isTimerExpired(trends.timestamp[woeid])) {
     twitterAPI
       .get("/trends/place.json", { params: { id: woeid } })
-      .then((response) => {
+      .then(async (response) => {
         // console.log(response.data);
         const serverDate = req.app.get("start-time");
         trends.saveTrends(woeid, response.data, serverDate);

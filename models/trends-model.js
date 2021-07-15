@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const crypto = require("crypto");
+const isEnglish = require("is-english");
 const helperUtils = require("../utils/helper_utils");
 const autoPinger = require("../utils/auto-ping");
 
@@ -25,6 +26,12 @@ class Trends {
 
   saveTrends = (woeid, trendsList, serverDate) => {
     const slimmed = trendsList[0]["trends"];
+    console.log(`WOEID : ${woeid}`);
+    if (parseInt(woeid) == 1) {
+      console.log("ENG FILTER - Enabled");
+      this.englishFilter(slimmed);
+    }
+
     let ranker;
     if (!this.list[woeid] || this.isOneDayCompleted(serverDate)) {
       this.ranking[woeid] = {};
@@ -77,6 +84,11 @@ class Trends {
     this.refreshTimestamp(woeid, this.list[woeid]);
 
     this.timestamp[woeid] = new Date();
+  };
+
+  englishFilter = (list) => {
+    const deletedFromList = _.remove(list, (trend) => !isEnglish(trend.name));
+    console.log(`~~~Eng Filter Removed : ${deletedFromList.length} trends!~~~`);
   };
 
   provideCurrentHash = (woeid) =>

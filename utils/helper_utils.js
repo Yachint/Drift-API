@@ -2,6 +2,12 @@ const _ = require("lodash");
 
 const comparator = (trend_a, trend_b) => trend_a.name === trend_b.name;
 
+const asyncForEach = async (array, callback) => {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
+};
+
 const array_a = [
   {
     name: "Yachint",
@@ -58,3 +64,4 @@ const bubbleRanker = (arr, ranker) => {
 // console.log(combined);
 
 exports.bubbleRanker = bubbleRanker;
+exports.asyncForEach = asyncForEach;
