@@ -56,6 +56,10 @@ const bubbleRanker = (arr, ranker) => {
   }
 };
 
+const trendTimeComparator = (a, b) => {
+  return a.ETA - b.ETA;
+};
+
 const fillWithNewerTrends = (list, trimmedList) => {
   let nameSet = new Set();
   let newList = [];
@@ -66,6 +70,8 @@ const fillWithNewerTrends = (list, trimmedList) => {
       newList.push(trend);
     }
   });
+  newList.sort(trendTimeComparator);
+  newList = newList.slice(0, 3);
   newList.push(...trimmedList);
   return newList;
 };
