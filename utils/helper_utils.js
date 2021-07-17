@@ -56,6 +56,20 @@ const bubbleRanker = (arr, ranker) => {
   }
 };
 
+const fillWithNewerTrends = (list, trimmedList) => {
+  let nameSet = new Set();
+  let newList = [];
+  _.remove(trimmedList, (trend) => trend.state === "new");
+  trimmedList.forEach((trend) => nameSet.add(trend.name));
+  list.forEach((trend) => {
+    if (trend.state === "new" && !nameSet.has(trend.name)) {
+      newList.push(trend);
+    }
+  });
+  newList.push(...trimmedList);
+  return newList;
+};
+
 // const compare = (a, b) => ranker[b.name] - ranker[a.name];
 // const combined = _.unionWith(array_a, array_b, comparator);
 // console.log(combined);
@@ -65,3 +79,4 @@ const bubbleRanker = (arr, ranker) => {
 
 exports.bubbleRanker = bubbleRanker;
 exports.asyncForEach = asyncForEach;
+exports.fillWithNewerTrends = fillWithNewerTrends;

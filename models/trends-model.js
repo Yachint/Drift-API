@@ -56,13 +56,18 @@ class Trends {
       });
 
       this.list[woeid].forEach((trend) => {
-        if (!newTrendData[trend.name]) {
-          console.log(`Decreased for ${trend.name}`);
-          ranker[trend.name]--;
-          trend.state = "dec";
-        } else {
-          ranker[trend.name]++;
-          trend.state = "inc";
+        const minutes = Math.floor(
+          (new Date() - this.trendCreatedAt[woeid][trend.name]) / (60 * 1000)
+        );
+        if (minutes > 60) {
+          if (!newTrendData[trend.name]) {
+            console.log(`Decreased for ${trend.name}`);
+            ranker[trend.name]--;
+            trend.state = "dec";
+          } else {
+            ranker[trend.name]++;
+            trend.state = "inc";
+          }
         }
       });
     }
@@ -124,6 +129,7 @@ class Trends {
       if (this.ranking[woeid][name] <= -2) {
         removed.push(name);
         deleteNameSet.add(name);
+        delete this.trendCreatedAt[woeid][name];
         delete this.ranking[woeid][name];
       }
     });
@@ -148,11 +154,19 @@ class Trends {
     helperUtils.bubbleRanker(this.list[woeid], this.ranking[woeid]);
     // this.tempId = woeid;
     // this.list[woeid].sort(this.sortComparator);
-    const trimmedList = this.list[woeid].slice(0, limit);
+    let trimmedList = this.list[woeid].slice(0, limit);
     console.log("**************************");
     trimmedList.forEach((tr) =>
       console.log(`[${tr.name} : ${this.ranking[woeid][tr.name]}]`)
     );
+    let minutes = Math.floor(new Date() - this.timestamp[woeid] / (60 * 1000));
+    if (minutes > 60) {
+      trimmedList = helperUtils.fillWithNewerTrends(
+        this.list[woeid],
+        trimmedList
+      );
+    }
+
     return trimmedList;
   };
 
