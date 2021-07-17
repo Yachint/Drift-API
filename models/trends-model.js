@@ -105,6 +105,7 @@ class Trends {
         const minutes = Math.floor(
           (new Date() - this.trendCreatedAt[woeid][trend.name]) / (60 * 1000)
         );
+        trend.ETA = minutes;
         if (minutes >= 60) {
           trend.since = this.time_convert(minutes);
         } else {
@@ -159,7 +160,9 @@ class Trends {
     trimmedList.forEach((tr) =>
       console.log(`[${tr.name} : ${this.ranking[woeid][tr.name]}]`)
     );
-    let minutes = Math.floor(new Date() - this.timestamp[woeid] / (60 * 1000));
+    let minutes = Math.floor(
+      (new Date() - this.timestamp[woeid]) / (60 * 1000)
+    );
     if (minutes > 60) {
       trimmedList = helperUtils.fillWithNewerTrends(
         this.list[woeid],
