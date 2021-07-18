@@ -62,7 +62,7 @@ const getWoeid = async (req, res, next) => {
   twitterAPI
     .get("/trends/closest.json", { params: { lat, long } })
     .then((response) => {
-      console.log(response);
+      console.log(response.data);
 
       res.json({
         status: 200,

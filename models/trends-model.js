@@ -10,7 +10,7 @@ class Trends {
     this.timestamp = {};
     this.trendCreatedAt = {};
     this.ranking = {};
-    this.tempId = 0;
+    this.staticTS = {};
     this.autoPingStarted = new Set();
     this.trendsHash = {};
   }
@@ -34,6 +34,7 @@ class Trends {
 
     let ranker;
     if (!this.list[woeid] || this.isOneDayCompleted(serverDate)) {
+      this.staticTS[woeid] = new Date();
       this.ranking[woeid] = {};
       ranker = this.ranking[woeid];
       this.trendCreatedAt[woeid] = {};
@@ -56,18 +57,13 @@ class Trends {
       });
 
       this.list[woeid].forEach((trend) => {
-        const minutes = Math.floor(
-          (new Date() - this.trendCreatedAt[woeid][trend.name]) / (60 * 1000)
-        );
-        if (minutes > 60) {
-          if (!newTrendData[trend.name]) {
-            console.log(`Decreased for ${trend.name}`);
-            ranker[trend.name]--;
-            trend.state = "dec";
-          } else {
-            ranker[trend.name]++;
-            trend.state = "inc";
-          }
+        if (!newTrendData[trend.name]) {
+          console.log(`Decreased for ${trend.name}`);
+          ranker[trend.name]--;
+          trend.state = "dec";
+        } else {
+          ranker[trend.name]++;
+          trend.state = "inc";
         }
       });
     }
@@ -156,10 +152,8 @@ class Trends {
     // this.tempId = woeid;
     // this.list[woeid].sort(this.sortComparator);
     let trimmedList = this.list[woeid].slice(0, limit);
-    let minutes = Math.floor(
-      (new Date() - this.timestamp[woeid]) / (60 * 1000)
-    );
-    if (minutes > 60) {
+    let minutes = Math.floor((new Date() - this.staticTS[woeid]) / (60 * 1000));
+    if (minutes > 5) {
       trimmedList = helperUtils.fillWithNewerTrends(
         this.list[woeid],
         trimmedList
