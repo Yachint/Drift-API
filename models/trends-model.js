@@ -156,10 +156,6 @@ class Trends {
     // this.tempId = woeid;
     // this.list[woeid].sort(this.sortComparator);
     let trimmedList = this.list[woeid].slice(0, limit);
-    console.log("**************************");
-    trimmedList.forEach((tr) =>
-      console.log(`[${tr.name} : ${this.ranking[woeid][tr.name]}]`)
-    );
     let minutes = Math.floor(
       (new Date() - this.timestamp[woeid]) / (60 * 1000)
     );
@@ -169,6 +165,11 @@ class Trends {
         trimmedList
       );
     }
+
+    console.log("**************************");
+    trimmedList.forEach((tr) =>
+      console.log(`[${tr.name} : ${this.ranking[woeid][tr.name]}]`)
+    );
 
     return trimmedList;
   };
