@@ -61,12 +61,10 @@ const trendTimeComparator = (a, b) => {
 };
 
 const fillWithNewerTrends = (list, trimmedList) => {
-  let nameSet = new Set();
   let newList = [];
   _.remove(trimmedList, (trend) => trend.state === "new");
-  trimmedList.forEach((trend) => nameSet.add(trend.name));
   list.forEach((trend) => {
-    if (trend.state === "new" && !nameSet.has(trend.name)) {
+    if (trend.state === "new") {
       newList.push(trend);
     }
   });
