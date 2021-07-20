@@ -33,7 +33,7 @@ class Trends {
     }
 
     let ranker;
-    if (!this.list[woeid] || this.isOneDayCompleted(serverDate)) {
+    if (!this.list[woeid]) {
       this.staticTS[woeid] = new Date();
       this.ranking[woeid] = {};
       ranker = this.ranking[woeid];
