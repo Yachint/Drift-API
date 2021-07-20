@@ -26,8 +26,10 @@ class Trends {
 
   saveTrends = (woeid, trendsList, serverDate) => {
     const slimmed = trendsList[0]["trends"];
+    let isGlobal = false;
     console.log(`WOEID : ${woeid}`);
     if (parseInt(woeid) == 1) {
+      isGlobal = true;
       console.log("ENG FILTER - Enabled");
       this.englishFilter(slimmed);
     }
@@ -40,6 +42,7 @@ class Trends {
       this.trendCreatedAt[woeid] = {};
       slimmed.forEach((trend) => {
         ranker[trend.name] = 1;
+        trend.type = isGlobal ? "global" : "regional";
         trend.state = "new";
         this.trendCreatedAt[woeid][trend.name] = new Date();
       });
@@ -47,6 +50,7 @@ class Trends {
       const newTrendData = {};
       ranker = this.ranking[woeid];
       slimmed.forEach((trend) => {
+        trend.type = isGlobal ? "global" : "regional";
         if (!ranker[trend.name]) {
           console.log(`NEW : ${trend.name}`);
           trend.state = "new";
