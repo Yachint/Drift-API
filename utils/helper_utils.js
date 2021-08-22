@@ -8,6 +8,89 @@ const asyncForEach = async (array, callback) => {
   }
 };
 
+const commaSeperator = (arr) => {
+  var str = "";
+  arr.forEach((id) => {
+    str = str + "," + id;
+  });
+  str = str.substring(1, str.length);
+  return str;
+};
+
+const textPopulator = (v2Tweets, v1Tweets) => {
+  const textKeyMap = {};
+
+  v2Tweets.forEach((tweet) => {
+    textKeyMap[tweet.id] = tweet.text;
+  });
+
+  v1Tweets.forEach((tweet) => {
+    tweet.text = textKeyMap[tweet.id];
+  });
+};
+
+const mediaPopulator = (v2Tweets, v2Media, v1Tweets) => {
+  const mediaKeyMap = {};
+  const urlKeyMap = {};
+
+  v2Tweets.forEach((tweet) => {
+    if (tweet.attachments) {
+      mediaKeyMap[tweet.attachments.media_keys[0]] = tweet.id;
+    }
+  });
+  console.log("Media key map :", mediaKeyMap);
+
+  v2Media.forEach((media) => {
+    urlKeyMap[mediaKeyMap[media.media_key]] = {
+      type: media.type,
+      link: media.url,
+    };
+  });
+
+  console.log("UrlKeyMap: ", urlKeyMap);
+
+  v1Tweets.forEach((tweet) => {
+    if (urlKeyMap[tweet.id]) {
+      tweet.media.type = urlKeyMap[tweet.id].type;
+      tweet.media.link = urlKeyMap[tweet.id].link;
+    }
+  });
+};
+
+const tweetConstructor = (arr) => {
+  const tweets = [];
+  //replace "_normal" from profile pic url for better resolution
+
+  arr.forEach((bloatedTweet) => {
+    let slimTweet = {
+      createdAt: bloatedTweet.created_at,
+      id: bloatedTweet.id_str,
+      text: bloatedTweet.text,
+      retweets: bloatedTweet.retweet_count,
+      likes: bloatedTweet.favorite_count,
+      media: {
+        type: "null",
+        link: "null",
+      },
+      user: {
+        userId: bloatedTweet.user.id,
+        name: bloatedTweet.user.name,
+        username: bloatedTweet.user.screen_name,
+        location: bloatedTweet.user.location,
+        followersCount: bloatedTweet.user.followers_count,
+        followingCount: bloatedTweet.user.friends_count,
+        verified: bloatedTweet.user.verified,
+        profileImage: bloatedTweet.user.profile_image_url,
+        profileBannerImage: bloatedTweet.user.profile_banner_url,
+      },
+    };
+
+    tweets.push(slimTweet);
+  });
+
+  return tweets;
+};
+
 const array_a = [
   {
     name: "Yachint",
@@ -81,7 +164,12 @@ const fillWithNewerTrends = (list, trimmedList) => {
 
 // combined.sort(compare);
 // console.log(combined);
+// commaSeperator(["2133", "3234", "5554", "9854", "5410984"]);
 
 exports.bubbleRanker = bubbleRanker;
 exports.asyncForEach = asyncForEach;
 exports.fillWithNewerTrends = fillWithNewerTrends;
+exports.commaSeperator = commaSeperator;
+exports.tweetConstructor = tweetConstructor;
+exports.mediaPopulator = mediaPopulator;
+exports.textPopulator = textPopulator;
