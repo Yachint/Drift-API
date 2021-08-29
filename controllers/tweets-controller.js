@@ -4,6 +4,7 @@ const helperUtils = require("../utils/helper_utils");
 const cache = require("../services/cache");
 
 const getTweets = async (req, res, next) => {
+  //CACHING IS ENABLED------
   const { term } = req.query;
   const { errors, result } = await cache.getSingle(term);
 

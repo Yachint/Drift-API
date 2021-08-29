@@ -1,4 +1,4 @@
-const twitterAPI = require("../utils/twitter-api");
+const twitterAPI = require("../utils/twitter-api").Build();
 
 const getTrends = async (req, res, next) => {
   const { woeid, limit } = req.query;
