@@ -55,7 +55,7 @@ const mediaPopulator = (v2Tweets, v2Media, v1Tweets) => {
   v2Media.forEach((media) => {
     urlKeyMap[mediaKeyMap[media.media_key]] = {
       type: media.type,
-      link: media.url,
+      link: media.url || media.preview_image_url,
     };
   });
 
