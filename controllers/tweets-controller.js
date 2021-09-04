@@ -33,6 +33,7 @@ const getTweets = async (req, res, next) => {
 
     const tweetV2Data = v2Response.data.data;
     helperUtils.textPopulator(tweetV2Data, tweets);
+    helperUtils.tweetDateFormatter(tweets);
 
     if (v2Response.data.includes !== undefined) {
       console.log("Media Present!");

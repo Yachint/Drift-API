@@ -1,11 +1,15 @@
 const _ = require("lodash");
 
-const comparator = (trend_a, trend_b) => trend_a.name === trend_b.name;
-
 const asyncForEach = async (array, callback) => {
   for (let index = 0; index < array.length; index++) {
     await callback(array[index], index, array);
   }
+};
+
+const tweetDateFormatter = (tweets) => {
+  tweets.forEach((tweet) => {
+    tweet.createdAt = tweet.createdAt.substring(4, 16);
+  });
 };
 
 const commaSeperator = (arr) => {
@@ -25,7 +29,15 @@ const textPopulator = (v2Tweets, v1Tweets) => {
   });
 
   v1Tweets.forEach((tweet) => {
-    tweet.text = textKeyMap[tweet.id];
+    let text = textKeyMap[tweet.id];
+    let link = "";
+    let idx = text.indexOf("https://t.co/");
+    if (idx !== -1) {
+      link = text.substring(idx, text.length);
+      text = text.substring(0, idx);
+    }
+    tweet.text = text;
+    tweet.link = link;
   });
 };
 
@@ -68,6 +80,7 @@ const tweetConstructor = (arr) => {
       text: bloatedTweet.text,
       retweets: bloatedTweet.retweet_count,
       likes: bloatedTweet.favorite_count,
+      link: "",
       media: {
         type: "null",
         link: "null",
@@ -173,3 +186,4 @@ exports.commaSeperator = commaSeperator;
 exports.tweetConstructor = tweetConstructor;
 exports.mediaPopulator = mediaPopulator;
 exports.textPopulator = textPopulator;
+exports.tweetDateFormatter = tweetDateFormatter;
